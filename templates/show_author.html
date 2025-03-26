@@ -1,0 +1,45 @@
+{% extends "common.html" %}
+
+{% block title %}Add Author Information{% endblock %}
+
+{% block content %}
+
+        <h1>{{ name }}</h1>
+
+        {% if author_image %}
+            <img src="{{ author_image }}" alt="{{ name }}" class="author-image">
+        {% else %}
+            <p><em>No image available</em></p>
+        {% endif %}
+
+        <p class="dates">
+            <strong>Born:</strong> {{ birth_date }}
+            {% if date_of_death %}
+                | <strong>Died:</strong> {{ date_of_death }}
+            {% endif %}
+        </p>
+
+        <div class="biography">
+            <h3>Biography:</h3>
+            <p>{{ biography }}</p>
+        </div>
+
+        <div class="books">
+            <h3>Books by {{ name }}:</h3>
+
+            <!-- Add a Book Button -->
+            <a href="{{ url_for('add_book', author_id=author_id) }}" class="add-book-btn">Add a Book</a>
+
+            {% if books %}
+                <ul class="book-list">
+                    {% for book in books %}
+                        <li>{{ book.title }} ({{ book.publication_year }})</li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <p>No books found for this author.</p>
+            {% endif %}
+        </div>
+    </div>
+
+{% endblock %}

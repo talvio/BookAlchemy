@@ -1,0 +1,24 @@
+{% extends "common.html" %}
+
+{% block title %}Book Information{% endblock %}
+
+{% block content %}
+
+    <div class="container">
+        <h1>{{ title }}</h1>
+        <p><strong>Publication Year:</strong> {{ publication_year }}</p>
+        <p><strong>ISBN:</strong> {{ isbn }}</p>
+        <p><strong>Author:</strong> {{ author.name }}</p>
+
+        <p><strong>Rating:</strong>
+            <span class="rating">
+                {{ "★" * rating }}{{ "☆" * (10 - rating) }}
+            </span> ({{ rating }}/10)
+        </p>
+
+        <div class="summary">
+            <h3>Summary:</h3>
+            <p>{{ summary }}</p>
+        </div>
+    </div>
+{% endblock %}

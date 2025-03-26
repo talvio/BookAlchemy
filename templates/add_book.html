@@ -1,0 +1,148 @@
+{% extends "common.html" %}
+
+{% block title %}Add Book Information{% endblock %}
+
+{% block content %}
+    <h2>Book Information</h2>
+    <div id="add_book_form_container">
+
+        <!-- Sidebar -->
+        <div id="author-info">
+
+            <div id="s-result-title">Start typing author name</div>
+
+            <div id="author-results"></div>
+            <div id="author-details" style="display:none;">
+                <h4 id="author-name"></h4>
+                <p id="author-birth"></p>
+                <p id="author-death"></p>
+                <p id="author-biography"></p>
+            </div>
+        </div>
+
+        <form id="add_book_form" action="/add_book" method="POST">
+
+            <input type="text" id="author-search" placeholder="Search for author..." oninput="searchAuthor()">
+            <div id="found-author-title-name">Author Name: <div id="found-author-name"></div></div>
+
+            <input type="hidden" id="author-id" name="author_id" value="">
+
+            <div class="input_field">
+            <label for="isbn">ISBN:</label>
+            <input type="text" id="isbn" name="isbn">
+            </div>
+
+            <div class="input_field">
+            <label for="title">Title:</label>
+            <input type="text" id="title" name="title" required>
+            </div>
+
+            <div class="input_field">
+                <div id="rating_box">
+                    <label for="rating">Rating:</label>
+                    <div class="star-rating">
+                        <input type="radio" id="star10" name="rating" value="10"><label for="star10">★</label>
+                        <input type="radio" id="star9" name="rating" value="9"><label for="star9">★</label>
+                        <input type="radio" id="star8" name="rating" value="8"><label for="star8">★</label>
+                        <input type="radio" id="star7" name="rating" value="7"><label for="star7">★</label>
+                        <input type="radio" id="star6" name="rating" value="6"><label for="star6">★</label>
+                        <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
+                        <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
+                        <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
+                        <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
+                        <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input_field">
+            <label for="publication_year">Publication Year:</label>
+            <input type="number" id="publication_year" name="publication_year" required>
+            </div>
+
+            <div class="input_field">
+            <label for="summary">Summary:</label>
+            <textarea id="summary" name="summary" rows="4"></textarea>
+            </div>
+
+            <button type="submit">Submit</button>
+        </form>
+
+    </div>
+
+{% endblock %}
+
+{% block script %}
+    <script>
+        function searchAuthor() {
+            const query = document.getElementById('author-search').value;
+
+            // Only search if the input is not empty
+            if (query.length > 0) {
+                fetch(`/search_book_author?query=${query}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        let resultsContainer = document.getElementById('author-results');
+                        resultsContainer.innerHTML = '';
+
+                        if (data.length === 1) {
+                            // Show the author's details if only one match
+                            const author = data[0];
+                            document.getElementById('s-result-title').textContent = "Matching author";
+                            document.getElementById('author-name').textContent = author.name;
+                            document.getElementById('found-author-name').textContent = author.name;
+                            document.getElementById('author-birth').textContent = `Born: ${author.birth_date}`;
+                            document.getElementById('author-death').textContent = author.date_of_death ? `Died: ${author.date_of_death}` : 'Alive';
+                            document.getElementById('author-biography').textContent = author.biography;
+
+                            // Set the author_id in the hidden field
+                            document.getElementById('author-id').value = author.author_id;
+
+                            document.getElementById('author-details').style.display = 'block';
+                        } else if (data.length > 1) {
+                            // Show a list of author names if there are multiple matches
+                            document.getElementById('s-result-title').textContent = "Continue typing to get a match";
+                            data.forEach(author => {
+                                let ul = document.getElementById('author-list');
+
+                                // Create the list if it does not exist yet
+                                if (!ul) {
+                                    ul = document.createElement('ul');
+                                    ul.id = 'author-list';
+                                    resultsContainer.appendChild(ul);
+                                }
+
+                                let li = document.createElement('li');
+                                li.textContent = author.name;
+                                li.style.cursor = 'pointer';  // Make it clear it's clickable
+                                li.onclick = function () {
+                                    showAuthorDetails(author);
+                                };
+
+                                ul.appendChild(li);
+                            });
+                        } else {
+                            // No results found
+                            resultsContainer.innerHTML = 'No authors found';
+                            document.getElementById('author-details').style.display = 'none';
+                        }
+                    });
+            } else {
+                document.getElementById('author-results').innerHTML = '';
+                document.getElementById('author-details').style.display = 'none';
+            }
+        }
+
+        function showAuthorDetails(author) {
+            document.getElementById('author-name').textContent = author.name;
+            document.getElementById('author-birth').textContent = `Born: ${author.birth_date}`;
+            document.getElementById('author-death').textContent = author.date_of_death ? `Died: ${author.date_of_death}` : 'Alive';
+            document.getElementById('author-biography').textContent = author.biography;
+
+            // Set the author_id in the hidden field
+            document.getElementById('author_id').value = author.id;
+
+            document.getElementById('author-details').style.display = 'block';
+        }
+    </script>
+{% endblock %}

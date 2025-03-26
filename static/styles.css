@@ -1,0 +1,279 @@
+* {
+    box-sizing: border-box;
+}
+
+nav {
+    padding: 10px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+
+.add-book-btn, nav a, nav button {
+    padding: 8px 12px;
+    text-decoration: none;
+    border-radius: 5px;
+    border: none;
+    background-color: rgba(80, 80, 77, 0.92);
+    color: #efcdc7;
+    box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5); /* X-offset, Y-offset, Blur, Color */
+    &:hover{
+        background-color: rgba(58, 58, 57, 0.92);
+        box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color */
+    }
+    &:focus-within{
+        background-color: #989895FF;
+        box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color *//
+    }
+
+}
+
+nav button {
+    cursor: pointer;
+}
+
+#home_button {
+    border-radius: 50%;
+    padding-bottom: 11px;
+    width: 80px;
+    height: 80px;
+    background-image: url('/static/images/home-chair.jpg');
+    background-size: cover;
+    background-position: center;
+    border: solid antiquewhite;
+
+}
+
+#search_field {
+    margin: 0 0px 0 0px;
+    border: 2px #787875FF solid;
+    cursor: pointer;
+    background-color: rgba(80, 80, 77, 0.92);
+    color: #efcdc7;
+    box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5); /* X-offset, Y-offset, Blur, Color */
+    &:hover{
+        background-color: rgba(58, 58, 57, 0.92);
+        box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color */
+    }
+    &:focus-within{
+        background-color: rgba(80, 80, 77, 0.92);
+        box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color *//
+    }
+}
+
+#search_button {
+    margin: 0;
+    padding-inline: 0;
+    max-width: 100px;
+    border: none;
+    cursor: pointer;
+    background-color: rgba(80, 80, 77, 0.92);
+    color: #efcdc7;
+    box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5); /* X-offset, Y-offset, Blur, Color */
+    &:hover{
+        background-color: rgba(58, 58, 57, 0.92);
+        box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color */
+    }
+    &:focus-within{
+        background-color: rgba(58, 58, 57, 0.92);
+        box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color *//
+    }
+}
+
+.header_form {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    gap: 10px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-image: url('/static/images/library.webp');
+    background-size: cover; /* Adjusts the image to cover the entire screen */
+    background-position: center; /* Centers the image */
+    background-attachment: fixed; /* Keeps the background fixed when scrolling */
+}
+
+.content {
+    background-color: rgba(80, 80, 77, 0.92);
+    color: #F2907E;
+    box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5); /* X-offset, Y-offset, Blur, Color */
+    width: 50vw;
+    font-family: Arial, Helvetica, sans-serif;
+    padding: 0 20px 20px 20px;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    border-radius: 10px;
+}
+
+form {
+    max-width: 900px;
+    min-width: 45vw;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+}
+.input_field {
+    width: 100%;
+    margin-top: 10px;
+}
+label {
+    font-weight: bold;
+    text-align: left;
+}
+
+input, textarea, button {
+    margin-top: 5px;
+    padding: 8px;
+    font-size: 16px;
+    width: 100%;
+}
+button {
+    margin-top: 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: rgba(58, 58, 57, 0.92);
+    color: #efcdc7;
+    box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color */
+    &:hover{
+        background-color: rgba(58, 58, 57, 0.92);
+        box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5); /* X-offset, Y-offset, Blur, Color */
+    }
+}
+
+.biography {
+    max-width: 700px;
+    text-align: left;
+
+}
+
+.books, .book-list {
+    max-width: 700px;
+    width: 100%;
+    text-align: left;
+
+}
+
+/* Add book */
+#add_book_form_container {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: center;
+    position: relative;
+    gap: 10px;
+}
+
+#s-result-title {
+    font-weight: bold;
+}
+
+#found-author-title-name {
+    margin: 20px 0 20px;
+    font-weight: bold;
+    display: flex;
+    width: 100%;
+    flex-direction: row;
+    align-items: flex-start;
+    /* justify-content: ; */
+    position: relative;
+    gap: 10px;
+}
+
+#author-info {
+    margin-top: 0;
+    padding: 20px;
+    border: 0 solid #ccc;
+    width: 40vw;
+    max-width: 300px;
+
+}
+
+#add_book_form {
+    width: 50%;
+}
+
+#author-results {
+    margin-top: 10px;
+}
+
+#author-results div {
+    margin-bottom: 10px;
+    cursor: pointer;
+}
+
+#author-details {
+    margin-top: 20px;
+}
+
+/* List authors
+body { font-family: Arial, sans-serif; margin: 40px; text-align: center; }*/
+.container { max-width: 800px; margin: auto; }
+.search-box { margin-bottom: 20px; }
+
+input {
+    color: #2b2929;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+.authors-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+.authors-table th, .authors-table td {
+    padding: 10px;
+    border: 1px solid #ddd;
+}
+.authors-table th { background-color: #f4f4f4; }
+.authors-table tr:hover { background-color: #f1f1f1; }
+
+/* Star rating */
+.star-rating {
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: flex-end;
+}
+
+.star-rating input {
+    display: none;
+}
+
+#rating_box {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: left;
+    gap: 20px;
+}
+
+.star-rating label {
+    font-size: 2rem;
+    color: gray;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+
+}
+
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: gold;
+}

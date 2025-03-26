@@ -1,0 +1,44 @@
+{% extends "common.html" %}
+
+{% block title %}Authors{% endblock %}
+
+{% block content %}
+
+        <h1>Authors</h1>
+
+        <!-- Search Field -->
+        <div class="search-box">
+            <input type="text" id="search" placeholder="Search authors...">
+        </div>
+
+        <!-- Add Author Button -->
+        <a href="{{ url_for('add_author') }}" class="add-author-btn">Add Author</a>
+
+        <!-- Authors Table -->
+        <table class="authors-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Birth Date</th>
+                    <th>Date of Death</th>
+                    <th>Biography</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for author in authors %}
+                <tr class="author-row">
+                    <td><a href="{{ url_for('show_author', author_id=author.author_id) }}">{{ author.name }}</a></td>
+                    <td>{{ author.birth_date }}</td>
+                    <td>{{ author.date_of_death or '—' }}</td>
+                    <td>{{ author.biography[:100] }}{% if author.biography|length > 100 %}...{% endif %}</td>
+                </tr>
+                {% else %}
+                <tr>
+                    <td colspan="4">No authors found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+{% endblock %}

@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Library{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+
+    <!-- Navigation Menu -->
+    <nav>
+        <a id="home_button" href="{{ url_for('home') }}"> </a>
+
+        <!-- Search Form -->
+        <form class="header_form" action="{{ url_for('search') }}" method="get">
+            <input id="search_field" type="text" name="query" placeholder="Search books & authors">
+            <button id="search_button" type="submit">Search</button>
+        </form>
+
+        <a href="{{ url_for('search_book') }}">Search Book</a>
+        <a href="{{ url_for('search_author') }}">Search Author</a>
+
+        <a href="{{ url_for('add_book') }}">Add Book</a>
+        <a href="{{ url_for('add_author') }}">Add Author</a>
+
+    </nav>
+
+    <hr>
+
+    <!-- Page Content -->
+    <div class="content">
+        {% block content %}{% endblock %}
+    </div>
+
+
+    {% block script %}
+    <!-- Default or placeholder script if needed -->
+    {% endblock %}
+</body>
+</html>

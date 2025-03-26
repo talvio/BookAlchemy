@@ -2,6 +2,7 @@
 logging
 pytest
 flask
+requests
 sqlalchemy
 flask_sqlalchemy
 jinja2

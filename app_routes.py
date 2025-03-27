@@ -1,44 +1,65 @@
 import controller
 
+
 def define_flask_routes(app):
+
+    @app.route('/favicon.ico')
+    def favicon():
+        return controller.send_favicon()
+
     @app.route('/', methods=['GET'])
     def home():
+        """ The Library home page, list of books and authors."""
         return controller.home()
 
     @app.route('/add_book', methods=['POST', 'GET'])
     def add_book():
+        """ Add new book to the library."""
         return controller.add_book()
+
+    @app.route('/add_author_book/<int:author_id>', methods=['POST', 'GET'])
+    def add_author_book(author_id):
+        """ Add new book with the author_id given"""
+        return controller.add_book(author_id=author_id)
 
     @app.route('/add_author', methods=['POST', 'GET'])
     def add_author():
+        """ Add new author to the library."""
         return controller.add_author()
 
     @app.route('/show_author/<int:author_id>', methods=['GET'])
     def show_author(author_id):
+        """ Show details of a the author"""
         return controller.show_author(author_id=author_id)
-
-    @app.route('/list_books', methods=['GET'])
-    def list_books():
-        return controller.list_books()
 
 
     @app.route('/list_authors', methods=['GET'])
     def list_authors():
+        """ List all authors in the library. """
         return controller.list_authors()
 
     @app.route('/search', methods=['GET'])
     def search():
-        pass
+        """ Search for books and authors in the library. """
+        return controller.search()
+
+    @app.route('/show_book/<int:book_id>', methods=['GET'])
+    def show_book(book_id):
+        """ Show details of a book in the library. """
+        return controller.show_book(book_id=book_id)
+
+    @app.route('/search_author', methods=['GET'])
+    def search_author():
+        """ Search for the author using a query string. """
+        return controller.search_author()
+
 
     @app.route('/search_book', methods=['GET'])
     def search_book():
         pass
+        #return controller.search_book()
 
-    @app.route('/search_book_author', methods=['GET'])
-    def search_book_author():
-        return controller.search_book_author()
-
-    @app.route('/search_author', methods=['GET'])
-    def search_author():
-        pass
-        #return controller.search_book_author()
+    @app.errorhandler(404)
+    def page_not_found(_):
+        """ Page not found error"""
+        return controller.page_not_found()

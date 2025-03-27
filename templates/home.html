@@ -4,6 +4,18 @@
 
 {% block content %}
 
-        <h1>Library Lobby</h1>
+    <h1>Library Lobby</h1>
+    <ul>
+        {% for author, book in results %}
+            <li>
+                    <a href="{{ url_for('show_book', book_id=book.book_id) }}">
+                        <span class="book-title">{{ book.title }}</span>
+                    </a> by
+                    <a href="{{ url_for('show_author', author_id=author.author_id) }}">
+                        <span class="author">{{ author.name }}</span>
+                    </a>
+            </li>
+        {% endfor %}
+    </ul>
 
 {% endblock %}

@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.ico') }}">
     <title>{% block title %}Library{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
@@ -14,12 +15,14 @@
 
         <!-- Search Form -->
         <form class="header_form" action="{{ url_for('search') }}" method="get">
-            <input id="search_field" type="text" name="query" placeholder="Search books & authors">
+            <input id="search_field" type="text" name="query" value="{{query_string}}" placeholder="Search books & authors">
             <button id="search_button" type="submit">Search</button>
         </form>
 
         <a href="{{ url_for('search_book') }}">Search Book</a>
         <a href="{{ url_for('search_author') }}">Search Author</a>
+
+        <a href="{{ url_for('list_authors') }}">All Authors</a>
 
         <a href="{{ url_for('add_book') }}">Add Book</a>
         <a href="{{ url_for('add_author') }}">Add Author</a>

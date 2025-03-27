@@ -27,7 +27,10 @@ nav {
         background-color: #989895FF;
         box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color *//
     }
-
+    &:link, &:visited, &:active {
+        color: #efcdc7;
+        text-decoration: none;
+    }
 }
 
 nav button {
@@ -109,9 +112,9 @@ body {
     background-color: rgba(80, 80, 77, 0.92);
     color: #F2907E;
     box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5); /* X-offset, Y-offset, Blur, Color */
-    width: 50vw;
+    width: 80vw;
     font-family: Arial, Helvetica, sans-serif;
-    padding: 0 20px 20px 20px;
+    padding: 0 20px 40px 20px;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -227,7 +230,6 @@ button {
 /* List authors
 body { font-family: Arial, sans-serif; margin: 40px; text-align: center; }*/
 .container { max-width: 800px; margin: auto; }
-.search-box { margin-bottom: 20px; }
 
 input {
     color: #2b2929;
@@ -237,13 +239,19 @@ input {
     border: 1px solid #ccc;
     border-radius: 5px;
 }
+
 .authors-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
 .authors-table th, .authors-table td {
-    padding: 10px;
-    border: 1px solid #ddd;
+    padding: 5px;
+    border: 2px solid rgba(58, 58, 57, 0.92);
 }
-.authors-table th { background-color: #f4f4f4; }
-.authors-table tr:hover { background-color: #f1f1f1; }
+.authors-table th {
+    background-color: rgba(58, 58, 57, 0.92);
+    text-align: left;
+}
+.authors-table tr:hover {
+    background-color: rgba(58, 58, 57, 0.57);
+}
 
 /* Star rating */
 .star-rating {
@@ -277,3 +285,28 @@ input {
 .star-rating label:hover ~ label {
     color: gold;
 }
+
+a:link {
+    color: #cccccc;
+    text-decoration: none;
+}
+a:visited {
+    color: #F2907E;
+}
+a:hover {
+    color: antiquewhite;
+    text-decoration: underline;
+}
+a:active {
+    color: dimgray;
+}
+
+/*
+
+ergba(58, 58, 57, 0.92);
+#efcdc7;
+10px 5px 20px rgba(239, 205, 199, 0.5);
+
+        background-color: rgba(58, 58, 57, 0.92);
+        box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5);
+ */

@@ -6,6 +6,10 @@
 
         <h1>{{ name }}</h1>
 
+            <!-- Add a Book Button -->
+            <a href="{{ url_for('add_author_book', author_id=author_id) }}" class="add-book-btn">Add a Book</a>
+
+
         {% if author_image %}
             <img src="{{ author_image }}" alt="{{ name }}" class="author-image">
         {% else %}
@@ -24,22 +28,21 @@
             <p>{{ biography }}</p>
         </div>
 
-        <div class="books">
+            <div class="books">
             <h3>Books by {{ name }}:</h3>
-
-            <!-- Add a Book Button -->
-            <a href="{{ url_for('add_book', author_id=author_id) }}" class="add-book-btn">Add a Book</a>
 
             {% if books %}
                 <ul class="book-list">
                     {% for book in books %}
-                        <li>{{ book.title }} ({{ book.publication_year }})</li>
+                        <a href="{{ url_for('show_book', book_id=book.book_id) }}"><li>{{ book }} </li></a>
                     {% endfor %}
                 </ul>
             {% else %}
                 <p>No books found for this author.</p>
             {% endif %}
+
         </div>
+                <a id="home_button" href="{{ url_for('home') }}"> </a>
     </div>
 
 {% endblock %}

@@ -5,10 +5,10 @@
 {% block content %}
 
     <div class="container">
-        <h1>{{ title }}</h1>
-        <p><strong>Publication Year:</strong> {{ publication_year }}</p>
-        <p><strong>ISBN:</strong> {{ isbn }}</p>
-        <p><strong>Author:</strong> {{ author.name }}</p>
+        <h1>{{ book.title }}</h1>
+        <p><strong>First Publication Year:</strong> {{ book.publication_year }}</p>
+        <p><strong>ISBN:</strong> {{ book.isbn }}</p>
+        <p><strong>Author:</strong> <a href="{{ url_for('show_author', author_id=book.author_id) }}">{{ author.name }}</a></p>
 
         <p><strong>Rating:</strong>
             <span class="rating">
@@ -18,7 +18,9 @@
 
         <div class="summary">
             <h3>Summary:</h3>
-            <p>{{ summary }}</p>
+            <p>{{ book.summary }}</p>
         </div>
     </div>
+
+                <a id="home_button" href="{{ url_for('home') }}"> </a>
 {% endblock %}

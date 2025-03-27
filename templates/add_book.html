@@ -3,7 +3,7 @@
 {% block title %}Add Book Information{% endblock %}
 
 {% block content %}
-    <h2>Book Information</h2>
+    <h2>Add new book to the Library</h2>
     <div id="add_book_form_container">
 
         <!-- Sidebar -->
@@ -22,7 +22,7 @@
 
         <form id="add_book_form" action="/add_book" method="POST">
 
-            <input type="text" id="author-search" placeholder="Search for author..." oninput="searchAuthor()">
+            <input type="text" id="author-search" value="{{author_name}}" placeholder="Search for author..." oninput="searchAuthor()">
             <div id="found-author-title-name">Author Name: <div id="found-author-name"></div></div>
 
             <input type="hidden" id="author-id" name="author_id" value="">
@@ -56,7 +56,7 @@
             </div>
 
             <div class="input_field">
-            <label for="publication_year">Publication Year:</label>
+            <label for="publication_year">First Publication Year:</label>
             <input type="number" id="publication_year" name="publication_year" required>
             </div>
 
@@ -79,7 +79,7 @@
 
             // Only search if the input is not empty
             if (query.length > 0) {
-                fetch(`/search_book_author?query=${query}`)
+                fetch(`/search_author?query=${query}`)
                     .then(response => response.json())
                     .then(data => {
                         let resultsContainer = document.getElementById('author-results');
@@ -88,16 +88,18 @@
                         if (data.length === 1) {
                             // Show the author's details if only one match
                             const author = data[0];
-                            document.getElementById('s-result-title').textContent = "Matching author";
+                            document.getElementById('s-result-title').textContent = "";
                             document.getElementById('author-name').textContent = author.name;
                             document.getElementById('found-author-name').textContent = author.name;
-                            document.getElementById('author-birth').textContent = `Born: ${author.birth_date}`;
-                            document.getElementById('author-death').textContent = author.date_of_death ? `Died: ${author.date_of_death}` : 'Alive';
+                            document.getElementById('author-birth').textContent =
+                                `Born: ${new Date(author.birth_date).toISOString().split('T')[0]}`;
+                            document.getElementById('author-death').textContent = author.date_of_death ?
+                                `Died: ${new Date(author.date_of_death).toISOString().split('T')[0]}` : 'Alive';
                             document.getElementById('author-biography').textContent = author.biography;
 
                             // Set the author_id in the hidden field
                             document.getElementById('author-id').value = author.author_id;
-
+                            document.getElementById('author-search').value = author.name
                             document.getElementById('author-details').style.display = 'block';
                         } else if (data.length > 1) {
                             // Show a list of author names if there are multiple matches

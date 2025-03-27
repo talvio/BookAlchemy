@@ -1,7 +1,8 @@
-from flask import jsonify, redirect, render_template, request, url_for
+from flask import jsonify, redirect, render_template, request, send_from_directory, url_for
+from sqlalchemy import or_
 import data_models
 from datetime import datetime
-from data_models import Book, Author
+from data_models import Author, Book, db
 
 LIBRARY_SERVER = "http://127.0.0.1:5002/"
 
@@ -13,8 +14,25 @@ def validate_date(date_string):
     except ValueError:
         return None
 
+def send_favicon():
+    return send_from_directory('static', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
 def home():
-    return render_template('home.html')
+    """
+    Show the Library Lobby aka home screen
+    :return:
+    """
+    results = (
+        db.session.query(Author, Book)
+        .join(Book, Author.author_id == Book.author_id)
+        .order_by(Book.title)
+        .all()
+    )
+    return render_template(
+        'home.html',
+        results=results,
+        query_string=""
+    )
 
 def show_book(book_id=None, book=None, author=None):
     if book is None:
@@ -28,12 +46,9 @@ def show_book(book_id=None, book=None, author=None):
     except ValueError:
         raiting = 0
     return render_template('show_book.html',
-           title=book.title,
-           publication_year=book.publication_year,
-           isbn=book.isbn,
-           rating=raiting,
-           summary=book.summary,
-           author=author
+            book=book,
+            rating=raiting,
+            author=author
     )
 
 def show_author(author=None, author_id=None):
@@ -46,16 +61,18 @@ def show_author(author=None, author_id=None):
     print(books_from_writer)
     return render_template('show_author.html',
         name=author.name,
-        authod_id=author.author_id,
+        author_id=author.author_id,
         birth_date=author.birth_date,
         date_of_death=author.date_of_death,
         biography=author.biography,
-        author_image="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/F_Scott_Fitzgerald_1921.jpg/250px-F_Scott_Fitzgerald_1921.jpg",
-        books= books_from_writer
+        books=books_from_writer[0] if len(books_from_writer) > 0 else None
     )
 
 
-def add_book():
+def add_book(author_id=None):
+    author = None
+    if author_id is not None:
+        author = Author.query.get(author_id)
     if request.method == 'POST':
         title = request.form.get('title', "")
         author_id = request.form.get('author_id', "")
@@ -65,9 +82,11 @@ def add_book():
         summary = request.form.get('summary', "")
         book = data_models.add_book(title, author_id, isbn, publication_year, rating, summary)
         author = Author.query.get(author_id)
-        return show_book(book=book, author=author)
+        return redirect(url_for('show_book', book_id=book.book_id))
 
-    return render_template('add_book.html')
+    return render_template('add_book.html',
+                           author_id = author_id if author_id is not None else "",
+                           author_name = author.name if author is not None else "")
 
 
 def add_author():
@@ -89,7 +108,7 @@ def list_authors():
     authors=Author.query.all()
     return render_template('show_authors.html', authors=authors)
 
-def search_book_author():
+def search_author():
     """
     We use this author search query as part of the Add Book form.
     :param search_string:
@@ -109,3 +128,51 @@ def search_book_author():
         })
 
     return jsonify(author_data)
+
+
+def search_book():
+    """
+    This function would allow javascript to search for books.
+    :return: json response
+    """
+    query = request.args.get('query', '')
+    books = Book.query.filter(Book.title.ilike(f'%{query}%')).all()
+
+    book_data = []
+    for book in books:
+        book_data.append({
+            'author_id': book.author_id,
+            'book_id': book.book_id,
+            'title': book.title,
+            'isbn': book.isbn,
+            'publication_year': book.publication_year,
+            'rating': book.rating,
+            'summary': book.summary,
+        })
+
+    return jsonify(book_data)
+
+
+def search():
+    authors = search_author().get_json()
+    books = search_book().get_json()
+    author_ids = [author.get('author_id', 0) for author in authors]
+    book_ids = [book.get('book_id', 0) for book in books]
+    query = request.args.get('query', None)
+    if query is None:
+        return redirect(url_for('home'))
+    results = (
+        db.session.query(Author, Book)
+        .join(Book, Author.author_id == Book.author_id)
+        .filter(or_(Author.author_id.in_(author_ids), Book.book_id.in_(book_ids)))
+        .order_by(Book.title)
+        .all()
+    )
+    return render_template(
+        'home.html',
+        results=results,
+        query_string=query
+    )
+
+def page_not_found(_):
+    return render_template('404.html'), 404

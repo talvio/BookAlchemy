@@ -67,7 +67,7 @@ class Book(db.Model):
         return (f"dbid: ({self.book_id}) "
                 f"{self.title} "
                 f"({self.publication_year}) "
-                f"ISBN: {self.book_isbn} "
+                f"ISBN: {self.isbn} "
                 f"{self.rating}/10"
         )
 

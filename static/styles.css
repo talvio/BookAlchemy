@@ -11,11 +11,10 @@ nav {
     position: relative;
 }
 
-.add-book-btn, nav a, nav button {
+.add-book-btn, .edit_button, nav a, nav button {
     padding: 8px 12px;
     text-decoration: none;
     border-radius: 5px;
-    border: none;
     background-color: rgba(80, 80, 77, 0.92);
     color: #efcdc7;
     box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5); /* X-offset, Y-offset, Blur, Color */
@@ -23,14 +22,27 @@ nav {
         background-color: rgba(58, 58, 57, 0.92);
         box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color */
     }
-    &:focus-within{
+    &:focus{
         background-color: #989895FF;
         box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color *//
+        outline: none;
     }
     &:link, &:visited, &:active {
         color: #efcdc7;
         text-decoration: none;
     }
+
+}
+
+.edit_button, .add-book-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    border: solid 1px #989895FF;
+}
+
+.round {
+    border-radius: 50%;
 }
 
 nav button {
@@ -42,11 +54,15 @@ nav button {
     padding-bottom: 11px;
     width: 80px;
     height: 80px;
-    background-image: url('/static/images/home-chair.jpg');
+    background-image: url('/static/images/home-chair.png');
     background-size: cover;
     background-position: center;
     border: solid antiquewhite;
-
+    /* box-shadow: 10px 5px 20px rgba(204, 141, 131, 0.5);  */
+    box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5); /* X-offset, Y-offset, Blur, Color */
+    &:hover {
+        box-shadow: 10px 5px 20px rgba(204, 141, 131, 0.5);
+    }
 }
 
 #search_field {
@@ -60,7 +76,8 @@ nav button {
         background-color: rgba(58, 58, 57, 0.92);
         box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color */
     }
-    &:focus-within{
+    &:focus{
+        outline: none;
         background-color: rgba(80, 80, 77, 0.92);
         box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color *//
     }
@@ -147,7 +164,24 @@ input, textarea, button {
     padding: 8px;
     font-size: 16px;
     width: 100%;
+    border-radius: 5px;
+    background-color: rgba(246, 228, 209, 0.78);
+    &:hover, &:focus, &:active {
+        border-color: #ccc;
+        outline: none;
+        box-shadow: 0 0 7px rgba(239, 205, 199, 0.5);
+    }
 }
+
+input {
+    color: #2b2929;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+
+}
+
 button {
     margin-top: 15px;
     border: none;
@@ -155,9 +189,12 @@ button {
     cursor: pointer;
     background-color: rgba(58, 58, 57, 0.92);
     color: #efcdc7;
-    box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color */
+    box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5);
     &:hover{
         background-color: rgba(58, 58, 57, 0.92);
+        box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5); /* X-offset, Y-offset, Blur, Color */
+    }
+    &:disabled {
         box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5); /* X-offset, Y-offset, Blur, Color */
     }
 }
@@ -176,7 +213,7 @@ button {
 }
 
 /* Add book */
-#add_book_form_container {
+#add_book_form_container, #edit_book_form_container {
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -210,7 +247,7 @@ button {
 
 }
 
-#add_book_form {
+#add_book_form, #edit_book_form {
     width: 50%;
 }
 
@@ -230,15 +267,6 @@ button {
 /* List authors
 body { font-family: Arial, sans-serif; margin: 40px; text-align: center; }*/
 .container { max-width: 800px; margin: auto; }
-
-input {
-    color: #2b2929;
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
 
 .authors-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
 .authors-table th, .authors-table td {

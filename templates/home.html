@@ -17,5 +17,10 @@
             </li>
         {% endfor %}
     </ul>
+        {% if not results %}
+            <div>
+                There are no books to show.
+            </div>
+        {% endif %}
 
 {% endblock %}

@@ -48,6 +48,16 @@ def define_flask_routes(app):
         """ Show details of a book in the library. """
         return controller.show_book(book_id=book_id)
 
+    @app.route('/edit_book/<int:book_id>', methods=['GET'])
+    def edit_book(book_id):
+        """ Edit the book. """
+        return controller.edit_book(book_id=book_id)
+
+    @app.route('/update_book/<int:book_id>', methods=['PUT', 'POST'])
+    def update_book(book_id):
+        """ Update a book in the library."""
+        return controller.update_book(book_id)
+
     @app.route('/search_author', methods=['GET'])
     def search_author():
         """ Search for the author using a query string. """
@@ -62,4 +72,14 @@ def define_flask_routes(app):
     @app.errorhandler(404)
     def page_not_found(_):
         """ Page not found error"""
-        return controller.page_not_found()
+        return controller.page_not_found(_)
+
+    @app.errorhandler(405)
+    def method_not_allowed(_):
+        """ Page not found error"""
+        return controller.method_not_allowed(_)
+
+    @app.errorhandler(500)
+    def internal_error(_):
+        """ Oh, oh! Something went wrong and we saw it happen. """
+        return controller.internal_error(_)

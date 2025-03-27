@@ -1,0 +1,19 @@
+{% extends "common.html" %}
+
+{% block title %}Library Lobby{% endblock %}
+
+{% block content %}
+
+
+    <h2>500 - Oh no! Something went wrong in the library.</h2>
+
+    <img class="round" src="{{ url_for('static', filename='images/broken.png') }}" style="width: 300px" alt="What?"/>
+
+
+    <p>But since you are still looking at something, you can try this button to get to the lobby.</p>
+
+
+<a id="home_button" href="{{ url_for('home') }}"> </a>
+
+
+{% endblock %}

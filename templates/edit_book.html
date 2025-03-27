@@ -3,8 +3,8 @@
 {% block title %}Add Book Information{% endblock %}
 
 {% block content %}
-    <h2>Add new book to the Library</h2>
-    <div id="add_book_form_container">
+    <h2>Edit a book in the Library</h2>
+    <div id="edit_book_form_container">
 
         <!-- Sidebar -->
         <div id="author-info">
@@ -13,56 +13,56 @@
 
             <div id="author-results"></div>
             <div id="author-details" style="display:none;">
-                <h4 id="author-name"></h4>
-                <p id="author-birth"></p>
-                <p id="author-death"></p>
-                <p id="author-biography"></p>
+                <h4 id="author-name">{{author.name}}</h4>
+                <p id="author-birth">{{author.birth_date}}</p>
+                <p id="author-death">{{author.date_of_death}}</p>
+                <p id="author-biography">{{author.biography}}</p>
             </div>
         </div>
 
-        <form id="add_book_form" action="/add_book" method="POST">
-
+        <form id="edit_book_form" action="{{ url_for('update_book', book_id=book.book_id) }}" method="POST">
+            <input type="hidden" name="_method" value="PUT">  <!-- Simulating PUT -->
             <input type="text" id="author-search" value="{{author_name}}" placeholder="Search for author..." oninput="searchAuthor()">
-            <div id="found-author-title-name">Author Name: <div id="found-author-name"></div></div>
+            <div id="found-author-title-name">Author Name: <div id="found-author-name">{{ author.name }}</div></div>
 
-            <input type="hidden" id="author-id" name="author_id" value="">
+            <input type="hidden" id="author-id" name="author_id" value="{{author.author_id}}">
 
             <div class="input_field">
             <label for="isbn">ISBN:</label>
-            <input type="text" id="isbn" name="isbn">
+            <input type="text" id="isbn" name="isbn" value="{{book.isbn}}">
             </div>
 
             <div class="input_field">
             <label for="title">Title:</label>
-            <input type="text" id="title" name="title" required>
+            <input type="text" id="title" name="title" required value="{{book.title}}">
             </div>
 
             <div class="input_field">
                 <div id="rating_box">
                     <label for="rating">Rating:</label>
                     <div class="star-rating">
-                        <input type="radio" id="star10" name="rating" value="10"><label for="star10">★</label>
-                        <input type="radio" id="star9" name="rating" value="9"><label for="star9">★</label>
-                        <input type="radio" id="star8" name="rating" value="8"><label for="star8">★</label>
-                        <input type="radio" id="star7" name="rating" value="7"><label for="star7">★</label>
-                        <input type="radio" id="star6" name="rating" value="6"><label for="star6">★</label>
-                        <input type="radio" id="star5" name="rating" value="5"><label for="star5">★</label>
-                        <input type="radio" id="star4" name="rating" value="4"><label for="star4">★</label>
-                        <input type="radio" id="star3" name="rating" value="3"><label for="star3">★</label>
-                        <input type="radio" id="star2" name="rating" value="2"><label for="star2">★</label>
-                        <input type="radio" id="star1" name="rating" value="1"><label for="star1">★</label>
+                        <input type="radio" id="star10" name="rating" value="10" {% if rating == 10 %}checked{% endif %}><label for="star10">★</label>
+                        <input type="radio" id="star9" name="rating" value="9" {% if rating == 9 %}checked{% endif %}><label for="star9">★</label>
+                        <input type="radio" id="star8" name="rating" value="8" {% if rating == 8 %}checked{% endif %}><label for="star8">★</label>
+                        <input type="radio" id="star7" name="rating" value="7" {% if rating == 7 %}checked{% endif %}><label for="star7">★</label>
+                        <input type="radio" id="star6" name="rating" value="6" {% if rating == 6 %}checked{% endif %}><label for="star6">★</label>
+                        <input type="radio" id="star5" name="rating" value="5" {% if rating == 5 %}checked{% endif %}><label for="star5">★</label>
+                        <input type="radio" id="star4" name="rating" value="4" {% if rating == 4 %}checked{% endif %}><label for="star4">★</label>
+                        <input type="radio" id="star3" name="rating" value="3" {% if rating == 3 %}checked{% endif %}><label for="star3">★</label>
+                        <input type="radio" id="star2" name="rating" value="2" {% if rating == 2 %}checked{% endif %}><label for="star2">★</label>
+                        <input type="radio" id="star1" name="rating" value="1" {% if rating == 1 %}checked{% endif %}><label for="star1">★</label>
                     </div>
                 </div>
             </div>
 
             <div class="input_field">
             <label for="publication_year">First Publication Year:</label>
-            <input type="number" id="publication_year" name="publication_year" required>
+            <input type="number" id="publication_year" name="publication_year" required value="{{book.publication_year}}">
             </div>
 
             <div class="input_field">
             <label for="summary">Summary:</label>
-            <textarea id="summary" name="summary" rows="4"></textarea>
+            <textarea id="summary" name="summary" rows="4">{{book.summary}}</textarea>
             </div>
 
             <button id="submit_button" type="submit" disabled>Submit</button>
@@ -158,7 +158,10 @@
                 submitButton.disabled = false; // Enable the submit button
             } else {
                 submitButton.disabled = true;  // Disable the submit button
+            }
         }
-    }
+        document.addEventListener("DOMContentLoaded", function() {
+            checkAuthorId();
+        });
     </script>
 {% endblock %}

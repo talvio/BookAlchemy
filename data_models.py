@@ -35,7 +35,7 @@ class Author(db.Model):
         )
 
     def __str__(self):
-        return_str = (f"dbid: ({self.id}) "
+        return_str = (f"dbid: ({self.author_id}) "
                       f"{self.name} "
                       f"{self.birth_date} - "
         )
@@ -93,14 +93,9 @@ def add_book(title, author_id, isbn, publication_year, rating, summary):
     db.session.commit()
     return book
 
-def get_all_books():
-    pass
+def update_database():
+    db.session.commit()
 
-def update_author(author):
-    pass
-
-def update_book(book):
-    pass
 
 
 

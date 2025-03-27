@@ -1,4 +1,4 @@
-from flask import jsonify, redirect, render_template, request, send_from_directory, url_for
+from flask import abort, jsonify, redirect, render_template, request, send_from_directory, url_for
 from sqlalchemy import or_
 import data_models
 from datetime import datetime
@@ -39,17 +39,54 @@ def show_book(book_id=None, book=None, author=None):
         if book_id is None:
             return "I need more information to find the book"
         book = Book.query.filter_by(book_id=book_id).first()
+    if book is None:
+        abort(404)
+
     if author is None:
         author = Author.query.filter_by(author_id=book.author_id).first()
     try:
-        raiting = int(book.rating)
+        rating = int(book.rating)
     except ValueError:
-        raiting = 0
+        rating = 0
     return render_template('show_book.html',
             book=book,
-            rating=raiting,
+            rating=rating,
             author=author
     )
+
+
+def edit_book(book_id):
+    """ Edit the book. """
+    book = Book.query.filter_by(book_id=book_id).first()
+    if book is None:
+        abort(404)
+    author = Author.query.filter_by(author_id=book.author_id).first()
+    if author is None:
+        abort(500)
+    return render_template('edit_book.html', book=book, author=author)
+
+
+def update_book(book_id=None):
+    if book_id is None:
+        book_id = request.form.get('book_id', 0)
+    book = Book.query.get(book_id)
+    author_id = request.form.get('author_id', book.author_id)
+    author = Author.query.get(author_id)
+    print(author_id, book_id)
+    print(author, book)
+    if author is None or book is None:
+        abort(404)
+    if request.method == 'POST' or request.method == 'PUT':
+        book.title = request.form.get('title', book.title)
+        book.author_id = request.form.get('author_id', book.author_id)
+        book.isbn = request.form.get('isbn', book.isbn)
+        book.publication_year = request.form.get('publication_year', book.publication_year)
+        book.rating = request.form.get('rating', book.rating)
+        book.summary = request.form.get('summary', book.summary)
+        data_models.update_database()
+        return redirect(url_for('show_book', book_id=book.book_id))
+    abort(405)
+
 
 def show_author(author=None, author_id=None):
     if author is None:
@@ -159,7 +196,8 @@ def search():
     author_ids = [author.get('author_id', 0) for author in authors]
     book_ids = [book.get('book_id', 0) for book in books]
     query = request.args.get('query', None)
-    if query is None:
+    if query is None or query == '':
+        print("Going home")
         return redirect(url_for('home'))
     results = (
         db.session.query(Author, Book)
@@ -176,3 +214,9 @@ def search():
 
 def page_not_found(_):
     return render_template('404.html'), 404
+
+def method_not_allowed(_):
+    return render_template('405.html'), 405
+
+def internal_error(_):
+    return render_template('500.html'), 500

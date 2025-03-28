@@ -95,9 +95,12 @@ if __name__ == '__main__':
     #params = {
     #    'q': 'Stephen King'
     #}
+    #params = {
+    #        'title': "Cat's cradle"
+    # }
     params = {
-            'title': "Cat's cradle"
-     }
+            'isbn': "9780394758282"
+    }
     is_success, data = access_open_library_api(params, API_URL_SEARCH)
 
     print(data)

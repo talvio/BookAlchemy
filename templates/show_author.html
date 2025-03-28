@@ -29,7 +29,7 @@
         </div>
 
             <div class="books">
-            <h3>Books by {{ name }}:</h3>
+            <div></div><h3>Books by {{ name }}:</h3></div>
 
             {% if books %}
                 <ul class="book-list">
@@ -38,7 +38,7 @@
                     {% endfor %}
                 </ul>
             {% else %}
-                <p>No books found for this author.</p>
+                <div>No books found for this author.</div>
             {% endif %}
 
         </div>

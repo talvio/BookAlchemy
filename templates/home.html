@@ -5,18 +5,30 @@
 {% block content %}
 
     <h1>Library Lobby</h1>
-    <ul>
-        {% for author, book in results %}
-            <li>
-                    <a href="{{ url_for('show_book', book_id=book.book_id) }}">
-                        <span class="book-title">{{ book.title }}</span>
-                    </a> by
-                    <a href="{{ url_for('show_author', author_id=author.author_id) }}">
-                        <span class="author">{{ author.name }}</span>
-                    </a>
-            </li>
-        {% endfor %}
-    </ul>
+    <form action="{{ url_for('home') }}" method="get">
+        <input type="hidden" name="query" value="{{query_string}}">
+        <input type="hidden" name="sort_by" value="{{sort_by}}">
+        <input type="hidden" name="sort_direction" value="{{sort_direction}}">
+        <div id="book-list">
+            <button type="submit"  class="book-list-title-heading" name="new_sort_by" value="title">↑↓ Title</button>
+            <button type="submit"  class="book-list-title-heading" name="new_sort_by" value="publication_year">↑↓ First published</button>
+            <button type="submit"  class="book-list-title-heading" name="new_sort_by" value="author">↑↓ Author</button>
+            {% for author, book in results %}
+                <div class="book-list-row-title">
+                        <a href="{{ url_for('show_book', book_id=book.book_id) }}">
+                            {{ book.title }}
+                        </a>
+                </div>
+                <div class="book-list-row-year">
+                            {{ book.publication_year }}
+                </div>
+                <div class="book-list-row-author">
+                    <a href="{{ url_for('show_author', author_id=author.author_id) }}">{{ author.name }} </a>
+
+                </div>
+            {% endfor %}
+        </div>
+    </form>
         {% if not results %}
             <div>
                 There are no books to show.

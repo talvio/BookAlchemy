@@ -5,14 +5,14 @@
 {% block content %}
 
     <h2>Author Information</h2>
-    <form action="/add_author" method="POST">
+    <form id="author_form" action="/add_author" method="POST">
         <div class="input_field">
             <label for="name">Name:</label>
             <input type="text" id="name" name="name" required>
         </div>
         <div class="input_field">
         <label for="birth_date">Birth Date:</label>
-        <input type="date" id="birth_date" name="birth_date" required>
+        <input type="date" id="birth_date" name="birth_date">
         </div>
         <div class="input_field">
         <label for="date_of_death">Date of Death:</label>

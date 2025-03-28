@@ -25,7 +25,7 @@
             <input type="text" id="author-search" value="{{author_name}}" placeholder="Search for author..." oninput="searchAuthor()">
             <div id="found-author-title-name">Author Name: <div id="found-author-name"></div></div>
 
-            <input type="hidden" id="author-id" name="author_id" value="">
+            <input type="hidden" id="author-id" name="author_id" value="{{author_id}}" required>
 
             <div class="input_field">
             <label for="isbn">ISBN:</label>
@@ -160,5 +160,9 @@
                 submitButton.disabled = true;  // Disable the submit button
         }
     }
-    </script>
+    document.addEventListener("DOMContentLoaded", function() {
+        checkAuthorId();
+    });
+</script>
+
 {% endblock %}

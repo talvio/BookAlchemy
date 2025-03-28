@@ -3,18 +3,24 @@
 }
 
 nav {
-    padding: 10px;
-    display: flex;
+    width: 100vw;
+    padding: 0 px;
+    display: grid;
+    grid-template-columns: auto 50% auto auto auto;
     gap: 10px;
     align-items: center;
     justify-content: center;
     position: relative;
+    margin-bottom: 20px;
 }
+
 
 .add-book-btn, .edit_button, nav a, nav button {
     padding: 8px 12px;
     text-decoration: none;
+    border: 2px #787875FF solid;
     border-radius: 5px;
+    cursor: pointer;
     background-color: rgba(80, 80, 77, 0.92);
     color: #efcdc7;
     box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5); /* X-offset, Y-offset, Blur, Color */
@@ -34,7 +40,7 @@ nav {
 
 }
 
-.edit_button, .add-book-btn {
+.edit_button, .add-book-btn {  /* These are on Author and Book pages */
     position: absolute;
     top: 10px;
     right: 10px;
@@ -45,15 +51,11 @@ nav {
     border-radius: 50%;
 }
 
-nav button {
-    cursor: pointer;
-}
-
 #home_button {
     border-radius: 50%;
     padding-bottom: 11px;
-    width: 80px;
-    height: 80px;
+    width: 50px;
+    height: 50px;
     background-image: url('/static/images/home-chair.png');
     background-size: cover;
     background-position: center;
@@ -65,8 +67,19 @@ nav button {
     }
 }
 
+.header_form {      /* The search field and search button at the top are in this form */
+    position: relative;
+    display: inline-block;
+    margin: 0;
+    padding: 0 0 0 0;
+    border: none;
+}
+
 #search_field {
-    margin: 0 0px 0 0px;
+    width: 100%;
+    position: relative;
+    display: inline-block;
+    margin: 0 0 0 0;
     border: 2px #787875FF solid;
     cursor: pointer;
     background-color: rgba(80, 80, 77, 0.92);
@@ -78,37 +91,29 @@ nav button {
     }
     &:focus{
         outline: none;
-        background-color: rgba(80, 80, 77, 0.92);
+        background-color: rgba(58, 58, 57, 0.92);
         box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color *//
     }
 }
 
 #search_button {
-    margin: 0;
-    padding-inline: 0;
-    max-width: 100px;
+    position: absolute;
+    right: 5px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
     border: none;
+    border-radius: 5px;
     cursor: pointer;
-    background-color: rgba(80, 80, 77, 0.92);
-    color: #efcdc7;
-    box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5); /* X-offset, Y-offset, Blur, Color */
+    font-size: 16px;
+    margin: 0;
+    background-color: rgba(255, 255, 255, 0);
     &:hover{
-        background-color: rgba(58, 58, 57, 0.92);
         box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color */
     }
     &:focus-within{
-        background-color: rgba(58, 58, 57, 0.92);
         box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color *//
     }
-}
-
-.header_form {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    gap: 10px;
 }
 
 body {
@@ -141,7 +146,7 @@ body {
     border-radius: 10px;
 }
 
-form {
+#author_form {
     max-width: 900px;
     min-width: 45vw;
     display: flex;
@@ -150,10 +155,25 @@ form {
     justify-content: center;
     position: relative;
 }
+
 .input_field {
     width: 100%;
     margin-top: 10px;
 }
+
+.input_field input,
+.input_field textarea,
+#author_form button,
+#add_book_form input,
+#edit_book_form input,
+#add_book_form button,
+#edit_book_form button
+{
+    width: 100%;
+    margin-top: 10px;
+}
+
+/* Add books and author forms */
 label {
     font-weight: bold;
     text-align: left;
@@ -163,7 +183,7 @@ input, textarea, button {
     margin-top: 5px;
     padding: 8px;
     font-size: 16px;
-    width: 100%;
+    border: 1px solid #ccc;
     border-radius: 5px;
     background-color: rgba(246, 228, 209, 0.78);
     &:hover, &:focus, &:active {
@@ -171,15 +191,6 @@ input, textarea, button {
         outline: none;
         box-shadow: 0 0 7px rgba(239, 205, 199, 0.5);
     }
-}
-
-input {
-    color: #2b2929;
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-
 }
 
 button {
@@ -205,15 +216,57 @@ button {
 
 }
 
-.books, .book-list {
-    max-width: 700px;
-    width: 100%;
+.books, #book-list, #author-list {
+    width: auto;
     text-align: left;
-
+    display: grid;
+/*    grid-template-columns: 60% 10% 30%; */
+    grid-template-columns: auto auto auto;
+    gap: 2px
 }
+
+#author-list {
+    grid-template-columns: auto auto auto auto;
+}
+
+
+.book-list-title-heading, #book-list-year-heading, #book-list-author-heading {
+    background-color: rgba(39, 39, 38, 0.92);
+    padding: 10px;
+    margin-bottom: 2px;
+    box-shadow: 0 0 15px rgba(239, 205, 199, 0.5);
+    &:hover{
+        background-color: rgba(39, 39, 38, 0.92);
+        box-shadow: 0px 0px 30px rgba(239, 205, 199, 0.5);  /* X-offset, Y-offset, Blur, Color */
+    }
+    border-radius: 5px;
+}
+
+.book-list-row-title, .book-list-row-year, .book-list-row-author {
+    background-color: rgba(58, 58, 57, 0.85);
+    padding: 10px;
+    margin-bottom: 2px;
+    box-shadow: 0 0 15px rgba(239, 205, 199, 0.5);
+    &:hover{
+        background-color: rgba(58, 58, 57, 1);
+        box-shadow: 0px 0px 30px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color */
+    }
+    border-radius: 5px;
+}
+.book-list-row-title {
+    width: 100%;
+}
+.book-list-row-year {
+    width: 100%;
+}
+.book-list-row-author {
+    width: 100%;
+}
+
 
 /* Add book */
 #add_book_form_container, #edit_book_form_container {
+    width: 100%;
     display: flex;
     flex-direction: row;
     align-items: flex-start;
@@ -264,23 +317,6 @@ button {
     margin-top: 20px;
 }
 
-/* List authors
-body { font-family: Arial, sans-serif; margin: 40px; text-align: center; }*/
-.container { max-width: 800px; margin: auto; }
-
-.authors-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
-.authors-table th, .authors-table td {
-    padding: 5px;
-    border: 2px solid rgba(58, 58, 57, 0.92);
-}
-.authors-table th {
-    background-color: rgba(58, 58, 57, 0.92);
-    text-align: left;
-}
-.authors-table tr:hover {
-    background-color: rgba(58, 58, 57, 0.57);
-}
-
 /* Star rating */
 .star-rating {
     display: flex;
@@ -301,7 +337,7 @@ body { font-family: Arial, sans-serif; margin: 40px; text-align: center; }*/
 }
 
 .star-rating label {
-    font-size: 2rem;
+    font-size: 2vw;
     color: gray;
     cursor: pointer;
     transition: color 0.2s ease-in-out;
@@ -329,12 +365,4 @@ a:active {
     color: dimgray;
 }
 
-/*
 
-ergba(58, 58, 57, 0.92);
-#efcdc7;
-10px 5px 20px rgba(239, 205, 199, 0.5);
-
-        background-color: rgba(58, 58, 57, 0.92);
-        box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5);
- */

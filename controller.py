@@ -1,5 +1,5 @@
 from flask import abort, jsonify, redirect, render_template, request, send_from_directory, url_for
-from sqlalchemy import or_
+from sqlalchemy import desc, or_
 import data_models
 from datetime import datetime
 from data_models import Author, Book, db
@@ -15,13 +15,34 @@ def validate_date(date_string):
         return None
 
 def send_favicon():
+    """ Apparently some browsers need this specific route to ask for the favicon """
     return send_from_directory('static', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
+
 
 def home():
     """
     Show the Library Lobby aka home screen
     :return:
     """
+    sort_direction = request.args.get('sort_direction', "asc")
+    if sort_direction not in ("asc", "desc"):
+        sort_direction = "asc"
+    sort_by = request.args.get('sort_by', "title")
+    if sort_by not in("title", "author", "publication_year"):
+        sort_by = "title"
+    new_sort_by = request.args.get('new_sort_by')
+    print("new sort", new_sort_by)
+    if new_sort_by == sort_by:
+        sort_direction = "desc" if sort_direction == "asc" else "asc"
+    else:
+        sort_direction = 'asc'
+    sort_by = new_sort_by if new_sort_by in ("title", "author", "publication_year") else sort_by
+    query = request.args.get('query', "")
+    print("sort_by", sort_by, sort_direction)
+    print("query", query)
+    return search(query=query, sort_by=sort_by, sort_direction=sort_direction)
+
+"""
     results = (
         db.session.query(Author, Book)
         .join(Book, Author.author_id == Book.author_id)
@@ -31,8 +52,11 @@ def home():
     return render_template(
         'home.html',
         results=results,
-        query_string=""
+        query_string=query,
+        sort_by=sort_by,
+        sort_direction=sort_direction
     )
+"""
 
 def show_book(book_id=None, book=None, author=None):
     if book is None:
@@ -190,26 +214,40 @@ def search_book():
     return jsonify(book_data)
 
 
-def search():
+def search(query=None, sort_by='title', sort_direction='asc'):
+    order_by = {
+        'title': {
+            'asc': Book.title,
+            'desc': desc(Book.title)
+        },
+        'author': {
+            'asc': Author.name,
+            'desc': desc(Author.name)
+        },
+        'publication_year': {
+            'asc': Book.publication_year,
+            'desc': desc(Book.publication_year)
+        }
+    }
     authors = search_author().get_json()
     books = search_book().get_json()
     author_ids = [author.get('author_id', 0) for author in authors]
     book_ids = [book.get('book_id', 0) for book in books]
-    query = request.args.get('query', None)
-    if query is None or query == '':
-        print("Going home")
-        return redirect(url_for('home'))
+    if query is None:
+        query = request.args.get('query', None)
     results = (
         db.session.query(Author, Book)
         .join(Book, Author.author_id == Book.author_id)
         .filter(or_(Author.author_id.in_(author_ids), Book.book_id.in_(book_ids)))
-        .order_by(Book.title)
+        .order_by(order_by.get(sort_by, Book.title).get(sort_direction, 'asc'))
         .all()
     )
     return render_template(
         'home.html',
         results=results,
-        query_string=query
+        query_string=query,
+        sort_by=sort_by,
+        sort_direction=sort_direction
     )
 
 def page_not_found(_):

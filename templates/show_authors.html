@@ -7,30 +7,30 @@
         <h1>Authors</h1>
 
         <!-- Authors Table -->
-        <table class="authors-table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Birth Date</th>
-                    <th>Date of Death</th>
-                    <th>Biography</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for author in authors %}
-                <tr class="author-row">
-                    <td><a href="{{ url_for('show_author', author_id=author.author_id) }}">{{ author.name }}</a></td>
-                    <td>{{ author.birth_date }}</td>
-                    <td>{{ author.date_of_death or '—' }}</td>
-                    <td>{{ author.biography[:100] }}{% if author.biography|length > 100 %}...{% endif %}</td>
-                </tr>
+        <div id="author-list">
+            <div class="book-list-title-heading">Name</div>
+            <div class="book-list-title-heading">Birth Date</div>
+            <div class="book-list-title-heading">Date of Death</div>
+            <div class="book-list-title-heading">Biography</div>
+
+            {% for author in authors %}
+            <div class="book-list-row-title">
+                    <a href="{{ url_for('show_author', author_id=author.author_id) }}">{{ author.name }}</a>
+            </div>
+            <div class="book-list-row-title">
+                    {{ author.birth_date }}
+            </div>
+            <div class="book-list-row-title">
+                    {{ author.date_of_death or '—' }}
+            </div>
+            <div class="book-list-row-title">
+                    <td>{{ author.biography[:100] }}{% if author.biography|length > 100 %}...{% endif %}
+            </div>
                 {% else %}
-                <tr>
-                    <td colspan="4">No authors found.</td>
-                </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    </div>
+
+            <p>No authors found.</p>
+            {% endfor %}
+
+        </div>
 
 {% endblock %}

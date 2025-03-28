@@ -38,6 +38,18 @@ def define_flask_routes(app):
         return controller.show_author(author_id=author_id)
 
 
+    @app.route('/edit_author/<int:author_id>', methods=['GET', 'POST'])
+    def edit_author(author_id):
+        """ Edit the author """
+        return controller.edit_author(author_id=author_id)
+
+
+    @app.route('/update_author/<int:author_id>', methods=['POST'])
+    def update_author(author_id):
+        """ Update the author """
+        return controller.update_author(author_id=author_id)
+
+
     @app.route('/list_authors', methods=['GET'])
     def list_authors():
         """ List all authors in the library. """

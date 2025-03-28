@@ -4,45 +4,63 @@
 
 {% block content %}
 
-        <h1>{{ name }}</h1>
+    <h1>{{ name }}</h1>
 
-            <!-- Add a Book Button -->
-            <a href="{{ url_for('add_author_book', author_id=author_id) }}" class="add-book-btn">Add a Book</a>
+    <!-- Add a Book Button -->
+    <div id="author-buttons">
+    <a href="{{ url_for('add_author_book', author_id=author_id) }}" class="add-book-btn">Add a Book</a>
+    <a href="{{ url_for('edit_author', author_id=author_id) }}" class="edit-author-btn">Edit Author</a>
+    </div>
 
-
-        {% if author_image %}
-            <img src="{{ author_image }}" alt="{{ name }}" class="author-image">
-        {% else %}
-            <p><em>No image available</em></p>
+    <p class="dates">
+        <strong>Born:</strong> {{ birth_date }}
+        {% if date_of_death %}
+            | <strong>Died:</strong> {{ date_of_death }}
         {% endif %}
+    </p>
 
-        <p class="dates">
-            <strong>Born:</strong> {{ birth_date }}
-            {% if date_of_death %}
-                | <strong>Died:</strong> {{ date_of_death }}
-            {% endif %}
-        </p>
+    <div class="biography">
+        <h3>Biography:</h3>
+        <p>{{ biography }}</p>
+    </div>
 
-        <div class="biography">
-            <h3>Biography:</h3>
-            <p>{{ biography }}</p>
-        </div>
 
-            <div class="books">
-            <div></div><h3>Books by {{ name }}:</h3></div>
+    <h3>Books by {{ name }}:</h3>
+    <div class="author-books">
+        {% if books %}
+            <div id="book-list-author">
+                {% for book in books %}
+                    <div class="book-list-row-title">
+                        <div class="book-cover">
+                            {% if book.isbn %}
+                            <img src="https://covers.openlibrary.org/b/isbn/{{book.isbn}}-S.jpg" alt="{{book.title}} cover"/>
+                            {% endif %}
+                        </div>
+                        <span class="title">
+                            <a href="{{ url_for('show_book', book_id=book.book_id) }}">
 
-            {% if books %}
-                <ul class="book-list">
-                    {% for book in books %}
-                        <a href="{{ url_for('show_book', book_id=book.book_id) }}"><li>{{ book }} </li></a>
-                    {% endfor %}
-                </ul>
-            {% else %}
+                                {{ book.title }}
+                            </a>
+                        </span>
+                    </div>
+                    <div class="book-list-row">
+                                {{ book.publication_year }}
+                    </div>
+                    <div class="book-list-row">
+
+                        <span class="rating">
+                            {% if book.rating %}
+                            {{ "★" * book.rating }}{{ "☆" * (10 - book.rating) }} ({{ book.rating }}/10)
+                            {% endif %}
+                        </span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
                 <div>No books found for this author.</div>
-            {% endif %}
+        {% endif %}
+    </div>
 
-        </div>
-
-<a id="home_button" href="{{ url_for('home') }}"> </a>
+    <a id="home_button" href="{{ url_for('home') }}"> </a>
 
 {% endblock %}

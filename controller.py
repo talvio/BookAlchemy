@@ -31,32 +31,14 @@ def home():
     if sort_by not in("title", "author", "publication_year"):
         sort_by = "title"
     new_sort_by = request.args.get('new_sort_by')
-    print("new sort", new_sort_by)
-    if new_sort_by == sort_by:
+    print("New sort by", new_sort_by)
+    if new_sort_by is not None and new_sort_by == sort_by:
         sort_direction = "desc" if sort_direction == "asc" else "asc"
-    else:
-        sort_direction = 'asc'
     sort_by = new_sort_by if new_sort_by in ("title", "author", "publication_year") else sort_by
     query = request.args.get('query', "")
-    print("sort_by", sort_by, sort_direction)
-    print("query", query)
+    print(query, sort_by, sort_direction)
     return search(query=query, sort_by=sort_by, sort_direction=sort_direction)
 
-"""
-    results = (
-        db.session.query(Author, Book)
-        .join(Book, Author.author_id == Book.author_id)
-        .order_by(Book.title)
-        .all()
-    )
-    return render_template(
-        'home.html',
-        results=results,
-        query_string=query,
-        sort_by=sort_by,
-        sort_direction=sort_direction
-    )
-"""
 
 def show_book(book_id=None, book=None, author=None):
     if book is None:
@@ -96,8 +78,6 @@ def update_book(book_id=None):
     book = Book.query.get(book_id)
     author_id = request.form.get('author_id', book.author_id)
     author = Author.query.get(author_id)
-    print(author_id, book_id)
-    print(author, book)
     if author is None or book is None:
         abort(404)
     if request.method == 'POST' or request.method == 'PUT':
@@ -115,11 +95,10 @@ def update_book(book_id=None):
 def show_author(author=None, author_id=None):
     if author is None:
         if author_id is None:
-            return "No author selected"
+            abort(404)
         else:
             author = Author.query.get(author_id)
     books_from_writer = data_models.Book.query.filter(data_models.Book.author_id == author_id).all(),
-    print(books_from_writer)
     return render_template('show_author.html',
         name=author.name,
         author_id=author.author_id,
@@ -128,6 +107,27 @@ def show_author(author=None, author_id=None):
         biography=author.biography,
         books=books_from_writer[0] if len(books_from_writer) > 0 else None
     )
+
+
+def edit_author(author_id):
+    author = Author.query.get(author_id)
+    if author is None:
+        abort(404)
+    return render_template('edit_author.html', author=author)
+
+
+def update_author(author_id):
+    author = Author.query.get(author_id)
+    if author is None:
+        abort(404)
+    if request.method == 'POST' or request.method == 'PUT':
+        author.name = request.form.get('name', author.name)
+        author.birth_date = validate_date(request.form.get('birth_date', author.birth_date))
+        author.date_of_death = validate_date(request.form.get('date_of_death', author.date_of_death))
+        author.biography = request.form.get('biography', author.biography)
+        data_models.update_database()
+        return redirect(url_for('show_author', author_id=author.author_id))
+    abort(405)
 
 
 def add_book(author_id=None):
@@ -162,8 +162,6 @@ def add_author():
     return render_template('add_author.html',
                            library_server=LIBRARY_SERVER)
 
-def list_books():
-    return render_template('index.html')
 
 def list_authors():
     authors=Author.query.all()
@@ -242,16 +240,37 @@ def search(query=None, sort_by='title', sort_direction='asc'):
         .order_by(order_by.get(sort_by, Book.title).get(sort_direction, 'asc'))
         .all()
     )
+    page = request.args.get('page', 1, type=int)
+    limit = request.args.get('limit', 10, type=int)
+
+    page_scroll = request.args.get('page_scroll')
+    if page_scroll == "up":
+        page -= 1
+    if page_scroll == "down":
+        page += 1
+    if page < 1:
+        page = 1
+    start_index = (page - 1) * limit
+    if start_index >= len(results):
+        start_index = 0
+        page = 1
+    print(page_scroll)
+    end_index = start_index + limit
+    paginated_result = results[start_index:end_index]
     return render_template(
         'home.html',
-        results=results,
+        results=paginated_result,
         query_string=query,
         sort_by=sort_by,
-        sort_direction=sort_direction
+        sort_direction=sort_direction,
+        page=page,
+        total_pages=len(results)//limit + 1,
     )
+
 
 def page_not_found(_):
     return render_template('404.html'), 404
+
 
 def method_not_allowed(_):
     return render_template('405.html'), 405

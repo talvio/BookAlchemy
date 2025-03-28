@@ -9,24 +9,40 @@
         <input type="hidden" name="query" value="{{query_string}}">
         <input type="hidden" name="sort_by" value="{{sort_by}}">
         <input type="hidden" name="sort_direction" value="{{sort_direction}}">
+        <input type="hidden" name="page" value="{{page}}">
+
+
         <div id="book-list">
             <button type="submit"  class="book-list-title-heading" name="new_sort_by" value="title">↑↓ Title</button>
             <button type="submit"  class="book-list-title-heading" name="new_sort_by" value="publication_year">↑↓ First published</button>
             <button type="submit"  class="book-list-title-heading" name="new_sort_by" value="author">↑↓ Author</button>
             {% for author, book in results %}
                 <div class="book-list-row-title">
+                    <div class="book-cover">
+                    {% if book.isbn %}
+                    <img src="https://covers.openlibrary.org/b/isbn/{{book.isbn}}-S.jpg" alt="{{book.title}} cover"/>
+                    {% endif %}
+                    </div>
+                    <span class="title">
                         <a href="{{ url_for('show_book', book_id=book.book_id) }}">
+
                             {{ book.title }}
                         </a>
+                    </span>
                 </div>
-                <div class="book-list-row-year">
+                <div class="book-list-row">
                             {{ book.publication_year }}
                 </div>
-                <div class="book-list-row-author">
+                <div class="book-list-row">
                     <a href="{{ url_for('show_author', author_id=author.author_id) }}">{{ author.name }} </a>
 
                 </div>
             {% endfor %}
+            <div id="pagination">
+                <button type="submit" id="up" name="page_scroll" value="up"> </button>
+                <div id="page_no">page {{page}} of {{total_pages}}</div>
+                <button type="submit" id="down" name="page_scroll" value="down"> </button>
+            </div>
         </div>
     </form>
         {% if not results %}

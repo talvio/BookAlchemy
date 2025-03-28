@@ -10,12 +10,11 @@ nav {
     gap: 10px;
     align-items: center;
     justify-content: center;
-    position: relative;
     margin-bottom: 20px;
 }
 
 
-.add-book-btn, .edit_button, nav a, nav button {
+.edit-author-btn, .add-book-btn, .edit_book_button, nav a, nav button, #pagination #up, #pagination #down {
     padding: 8px 12px;
     text-decoration: none;
     border: 2px #787875FF solid;
@@ -40,11 +39,25 @@ nav {
 
 }
 
-.edit_button, .add-book-btn {  /* These are on Author and Book pages */
+.edit_book_button {
     position: absolute;
+    align-items: center;
     top: 10px;
-    right: 10px;
-    border: solid 1px #989895FF;
+    right: 20px;
+}
+
+#author-buttons {  /* These are on Author and Book pages */
+    position: absolute;
+    display: grid;
+    grid-template-columns: 50% 50%;
+    gap:10px;
+    align-items: center;
+    top: 10px;
+    right: 20px;
+}
+
+#author-buttons {
+    ;
 }
 
 .round {
@@ -77,7 +90,6 @@ nav {
 
 #search_field {
     width: 100%;
-    position: relative;
     display: inline-block;
     margin: 0 0 0 0;
     border: 2px #787875FF solid;
@@ -121,7 +133,6 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: relative;
     font-family: Arial, sans-serif;
     margin: 20px;
     background-image: url('/static/images/library.webp');
@@ -142,8 +153,9 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: relative;
     border-radius: 10px;
+    position: relative;
+
 }
 
 #author_form {
@@ -153,7 +165,6 @@ body {
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    position: relative;
 }
 
 .input_field {
@@ -180,7 +191,6 @@ label {
 }
 
 input, textarea, button {
-    margin-top: 5px;
     padding: 8px;
     font-size: 16px;
     border: 1px solid #ccc;
@@ -194,7 +204,6 @@ input, textarea, button {
 }
 
 button {
-    margin-top: 15px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
@@ -216,21 +225,24 @@ button {
 
 }
 
-.books, #book-list, #author-list {
+#book-list, #book-list-author, #all-authors-list {
     width: auto;
     text-align: left;
     display: grid;
-/*    grid-template-columns: 60% 10% 30%; */
-    grid-template-columns: auto auto auto;
-    gap: 2px
+    grid-template-columns:  auto auto auto;
+    gap: 2px;
 }
 
-#author-list {
+.author-books {
+    margin-bottom: 30px;
+}
+
+#all-authors-list {
     grid-template-columns: auto auto auto auto;
 }
 
 
-.book-list-title-heading, #book-list-year-heading, #book-list-author-heading {
+.book-list-title-heading {
     background-color: rgba(39, 39, 38, 0.92);
     padding: 10px;
     margin-bottom: 2px;
@@ -242,7 +254,7 @@ button {
     border-radius: 5px;
 }
 
-.book-list-row-title, .book-list-row-year, .book-list-row-author {
+.book-list-row, .book-list-row-title {
     background-color: rgba(58, 58, 57, 0.85);
     padding: 10px;
     margin-bottom: 2px;
@@ -253,14 +265,47 @@ button {
     }
     border-radius: 5px;
 }
+.book-list-row {
+    width: 100%;
+    display: grid;
+    align-items: center;
+}
+
 .book-list-row-title {
-    width: 100%;
+    display: grid;
+    grid-template-columns:  30px auto;
+    align-items: center;
 }
-.book-list-row-year {
-    width: 100%;
+
+.book-list-row .book-cover, .book-cover img {
+    height: 30px;
+    width: 20px;
 }
-.book-list-row-author {
-    width: 100%;
+
+#book-list #pagination {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    gap: 10px;
+    font-size: 12px;
+    align-items: center;
+}
+
+#book-list #pagination #page_no {
+    align-items: center;
+}
+
+#book-list #pagination #up {
+    border-top-left-radius: 50%;
+    border-bottom-left-radius: 50%;
+    width: 70px;
+}
+#book-list #pagination #down {
+    border-top-right-radius: 50%;
+    border-bottom-right-radius: 50%;
+    width: 70px;
 }
 
 
@@ -271,13 +316,25 @@ button {
     flex-direction: row;
     align-items: flex-start;
     justify-content: center;
-    position: relative;
     gap: 10px;
 }
 
-#s-result-title {
-    font-weight: bold;
+.show_book_container {
+    display: grid;
+/*    grid-template-columns: 60% 10% 30%; */
+    grid-template-columns: auto auto;
+    gap: 3vw;
+    margin: 3vw;
 }
+
+.show_book_container #book_cover {
+    padding-top: 10px;
+}
+.show_book_container h1 {
+    margin-top: 0;
+}
+
+
 
 #found-author-title-name {
     margin: 20px 0 20px;
@@ -287,9 +344,9 @@ button {
     flex-direction: row;
     align-items: flex-start;
     /* justify-content: ; */
-    position: relative;
     gap: 10px;
 }
+
 
 #author-info {
     margin-top: 0;
@@ -351,7 +408,7 @@ button {
 }
 
 a:link {
-    color: #cccccc;
+    color: #F2907E;
     text-decoration: none;
 }
 a:visited {

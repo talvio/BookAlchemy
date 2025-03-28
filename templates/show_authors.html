@@ -7,23 +7,23 @@
         <h1>Authors</h1>
 
         <!-- Authors Table -->
-        <div id="author-list">
+        <div id="all-authors-list">
             <div class="book-list-title-heading">Name</div>
             <div class="book-list-title-heading">Birth Date</div>
             <div class="book-list-title-heading">Date of Death</div>
             <div class="book-list-title-heading">Biography</div>
 
             {% for author in authors %}
-            <div class="book-list-row-title">
+            <div class="book-list-row">
                     <a href="{{ url_for('show_author', author_id=author.author_id) }}">{{ author.name }}</a>
             </div>
-            <div class="book-list-row-title">
+            <div class="book-list-row">
                     {{ author.birth_date }}
             </div>
-            <div class="book-list-row-title">
+            <div class="book-list-row">
                     {{ author.date_of_death or '—' }}
             </div>
-            <div class="book-list-row-title">
+            <div class="book-list-row">
                     <td>{{ author.biography[:100] }}{% if author.biography|length > 100 %}...{% endif %}
             </div>
                 {% else %}

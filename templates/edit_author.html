@@ -1,0 +1,29 @@
+{% extends "common.html" %}
+
+{% block title %}Edit Author Information{% endblock %}
+
+{% block content %}
+
+    <h2>Author Information</h2>
+    <form id="author_form" action="{{ url_for('update_author', author_id=author.author_id) }}" method="POST">
+        <div class="input_field">
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" required value="{{author.name}}">
+        </div>
+        <div class="input_field">
+        <label for="birth_date">Birth Date:</label>
+        <input type="date" id="birth_date" name="birth_date" value="{{author.birth_date}}">
+        </div>
+        <div class="input_field">
+        <label for="date_of_death">Date of Death:</label>
+        <input type="date" id="date_of_death" name="date_of_death" value="{{author.date_of_death}}">
+        </div>
+
+        <div class="input_field">
+        <label for="biography">Biography:</label>
+        <textarea id="biography" name="biography" rows="4">{{author.biography}}</textarea>
+        </div>
+
+        <button type="submit">Submit</button>
+    </form>
+{% endblock %}

@@ -1,10 +1,12 @@
+import json
 from flask import abort, jsonify, redirect, render_template, request, send_from_directory, url_for
 from sqlalchemy import desc, or_
-import data_models
 from datetime import datetime
+import data_models
 from data_models import Author, Book, db
 
 LIBRARY_SERVER = "http://127.0.0.1:5002/"
+
 
 def validate_date(date_string):
     """ Validate that a date in a string format is a valid date in the format yyyy-mm-dd """
@@ -14,6 +16,7 @@ def validate_date(date_string):
     except ValueError:
         return None
 
+
 def send_favicon():
     """ Apparently some browsers need this specific route to ask for the favicon """
     return send_from_directory('static', 'favicon.ico', mimetype='image/vnd.microsoft.icon')
@@ -21,8 +24,9 @@ def send_favicon():
 
 def home():
     """
-    Show the Library Lobby aka home screen
-    :return:
+    Show the Library Lobby aka home screen.
+    home calls the search function to deliver the full experience.
+    :return: home page as returned by the search function
     """
     sort_direction = request.args.get('sort_direction', "asc")
     if sort_direction not in ("asc", "desc"):
@@ -31,19 +35,18 @@ def home():
     if sort_by not in("title", "author", "publication_year"):
         sort_by = "title"
     new_sort_by = request.args.get('new_sort_by')
-    print("New sort by", new_sort_by)
     if new_sort_by is not None and new_sort_by == sort_by:
         sort_direction = "desc" if sort_direction == "asc" else "asc"
     sort_by = new_sort_by if new_sort_by in ("title", "author", "publication_year") else sort_by
     query = request.args.get('query', "")
-    print(query, sort_by, sort_direction)
     return search(query=query, sort_by=sort_by, sort_direction=sort_direction)
 
 
 def show_book(book_id=None, book=None, author=None):
+    """ Show the chosen book """
     if book is None:
         if book_id is None:
-            return "I need more information to find the book"
+            abort(400)
         book = Book.query.filter_by(book_id=book_id).first()
     if book is None:
         abort(404)
@@ -72,7 +75,50 @@ def edit_book(book_id):
     return render_template('edit_book.html', book=book, author=author)
 
 
+def delete_book(book_id=None,confirmed=None):
+    """ Delete the book. """
+    if book_id is None:
+        request.form.get('book_id', 0)
+    book = Book.query.filter_by(book_id=book_id).first()
+    if book is None:
+        abort(404)
+    author = Author.query.filter_by(author_id=book.author_id).first()
+    if author is None:
+        abort(500)
+    if confirmed == False:
+        return render_template('relieved.html')
+    if confirmed is None:
+        return render_template('confirmation.html',
+                        question="Do you really want to remove this book?",
+                        hidden_json=json.dumps({"book_id": book_id}),
+                        yes="Yes, there can be too many books!",
+                        no="No, I want to keep it forever!",
+                        next_action="delete_book"
+        )
+    if confirmed == True:
+        data_models.delete_book(book)
+        return render_template('deleted_book.html', book=book, author=author)
+    abort(500)
+
+
+def confirmation():
+    """ Confirm an action and call the action as given by the user. """
+    next_action = request.form.get('next_action', None)
+    hidden_json = request.form.get('hidden_json', None)
+    answer = request.form.get('confirmation', None)
+    json_data = json.loads(hidden_json)
+    if isinstance(json_data, str):  # Check if it is still a string
+        json_data = json.loads(json_data)
+    if next_action == "delete_book":
+        book_id = json_data.get('book_id', None)
+        if answer == 'yes':
+            return delete_book(book_id, confirmed=True)
+        return render_template('relieved.html')
+    abort(500)
+
+
 def update_book(book_id=None):
+    """ Update the book in the database. """
     if book_id is None:
         book_id = request.form.get('book_id', 0)
     book = Book.query.get(book_id)
@@ -80,7 +126,7 @@ def update_book(book_id=None):
     author = Author.query.get(author_id)
     if author is None or book is None:
         abort(404)
-    if request.method == 'POST' or request.method == 'PUT':
+    if request.method in ('POST','PUT'):
         book.title = request.form.get('title', book.title)
         book.author_id = request.form.get('author_id', book.author_id)
         book.isbn = request.form.get('isbn', book.isbn)
@@ -93,23 +139,27 @@ def update_book(book_id=None):
 
 
 def show_author(author=None, author_id=None):
+    """ Show the author in the database. """
     if author is None:
         if author_id is None:
             abort(404)
         else:
             author = Author.query.get(author_id)
-    books_from_writer = data_models.Book.query.filter(data_models.Book.author_id == author_id).all(),
+    books_from_writer = data_models.Book.query.filter(data_models.Book.author_id == author_id).all()
+    print(books_from_writer)
+
     return render_template('show_author.html',
         name=author.name,
         author_id=author.author_id,
         birth_date=author.birth_date,
         date_of_death=author.date_of_death,
         biography=author.biography,
-        books=books_from_writer[0] if len(books_from_writer) > 0 else None
+        books=books_from_writer if len(books_from_writer) > 0 else None
     )
 
 
 def edit_author(author_id):
+    """ Edit the author in the database. """
     author = Author.query.get(author_id)
     if author is None:
         abort(404)
@@ -117,13 +167,18 @@ def edit_author(author_id):
 
 
 def update_author(author_id):
+    """ Update the author in the database. """
     author = Author.query.get(author_id)
     if author is None:
         abort(404)
-    if request.method == 'POST' or request.method == 'PUT':
+    if request.method in ('POST', 'PUT'):
         author.name = request.form.get('name', author.name)
-        author.birth_date = validate_date(request.form.get('birth_date', author.birth_date))
-        author.date_of_death = validate_date(request.form.get('date_of_death', author.date_of_death))
+        author.birth_date = validate_date(request.form.get(
+            'birth_date', author.birth_date)
+        )
+        author.date_of_death = validate_date(request.form.get(
+            'date_of_death', author.date_of_death)
+        )
         author.biography = request.form.get('biography', author.biography)
         data_models.update_database()
         return redirect(url_for('show_author', author_id=author.author_id))
@@ -131,6 +186,7 @@ def update_author(author_id):
 
 
 def add_book(author_id=None):
+    """ Add a new book to the database. """
     author = None
     if author_id is not None:
         author = Author.query.get(author_id)
@@ -142,7 +198,8 @@ def add_book(author_id=None):
         rating = request.form.get('rating', "")
         summary = request.form.get('summary', "")
         book = data_models.add_book(title, author_id, isbn, publication_year, rating, summary)
-        author = Author.query.get(author_id)
+        if Author.query.get(author_id) is None:
+            abort(404)
         return redirect(url_for('show_book', book_id=book.book_id))
 
     return render_template('add_book.html',
@@ -151,6 +208,7 @@ def add_book(author_id=None):
 
 
 def add_author():
+    """ Add a new author to the database. """
     if request.method == 'POST':
         name = request.form.get('name', "")
         birth_date = validate_date(request.form.get('birth_date', ""))
@@ -164,8 +222,13 @@ def add_author():
 
 
 def list_authors():
+    """
+    List all authors in the database. This page could use work.
+    It does not paginate or sort authors.
+    """
     authors=Author.query.all()
     return render_template('show_authors.html', authors=authors)
+
 
 def search_author():
     """
@@ -208,11 +271,11 @@ def search_book():
             'rating': book.rating,
             'summary': book.summary,
         })
-
     return jsonify(book_data)
 
 
 def search(query=None, sort_by='title', sort_direction='asc'):
+    """ Search books and authors matching the query.  """
     order_by = {
         'title': {
             'asc': Book.title,
@@ -248,15 +311,16 @@ def search(query=None, sort_by='title', sort_direction='asc'):
         page -= 1
     if page_scroll == "down":
         page += 1
-    if page < 1:
-        page = 1
+    page = max(page, 1)
     start_index = (page - 1) * limit
     if start_index >= len(results):
         start_index = 0
         page = 1
-    print(page_scroll)
     end_index = start_index + limit
     paginated_result = results[start_index:end_index]
+    total_books = len(results)
+    total_pages = total_books // limit
+    total_pages += 1 if total_books % limit != 0 else 0
     return render_template(
         'home.html',
         results=paginated_result,
@@ -264,16 +328,25 @@ def search(query=None, sort_by='title', sort_direction='asc'):
         sort_by=sort_by,
         sort_direction=sort_direction,
         page=page,
-        total_pages=len(results)//limit + 1,
+        total_pages=total_pages,
+        book_count=total_books
     )
 
 
+def bad_request(_):
+    """ 400 """
+    return render_template('400.html'), 400
+
+
 def page_not_found(_):
+    """ 404 """
     return render_template('404.html'), 404
 
 
 def method_not_allowed(_):
+    """ 405 """
     return render_template('405.html'), 405
 
 def internal_error(_):
+    """ 500 """
     return render_template('500.html'), 500

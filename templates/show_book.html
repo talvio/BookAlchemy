@@ -14,7 +14,13 @@
             <h1>
                 {{ book.title }}
             </h1>
+
+            <div id="author-buttons">
+            <a class="add-book-btn" href="{{ url_for('delete_book', book_id=book.book_id) }}">Burn book</a>
             <a class="edit_book_button" href="{{ url_for('edit_book', book_id=book.book_id) }}">Edit book</a>
+            </div>
+
+
 
             <p><strong>First Publication Year:</strong> {{ book.publication_year }}</p>
             <p><strong>ISBN:</strong> {{ book.isbn }}</p>

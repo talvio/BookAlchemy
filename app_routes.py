@@ -1,3 +1,4 @@
+""" This file sets up the Flask application routes """
 import controller
 
 
@@ -5,6 +6,7 @@ def define_flask_routes(app):
 
     @app.route('/favicon.ico')
     def favicon():
+        """ Return favicon """
         return controller.send_favicon()
 
 
@@ -74,6 +76,17 @@ def define_flask_routes(app):
         return controller.edit_book(book_id=book_id)
 
 
+    @app.route('/delete_book/<int:book_id>', methods=['GET'])
+    def delete_book(book_id):
+        """ Delete the book. """
+        return controller.delete_book(book_id=book_id)
+
+    @app.route('/delete_book/', methods=['GET'])
+    def delete_book_args():
+        """ Delete the book. """
+        return controller.delete_book(book_id=book_id)
+
+
     @app.route('/update_book/<int:book_id>', methods=['PUT', 'POST'])
     def update_book(book_id):
         """ Update a book in the library."""
@@ -86,10 +99,16 @@ def define_flask_routes(app):
         return controller.search_author()
 
 
-    @app.route('/search_book', methods=['GET'])
-    def search_book():
-        pass
-        #return controller.search_book()
+    @app.route('/confirmation', methods=['POST'])
+    def confirmation():
+        """ Asking the user a yes/no question. """
+        return controller.confirmation()
+
+
+    @app.errorhandler(400)
+    def bad_request(_):
+        """ Generic bad request """
+        return controller.bad_request(_)
 
 
     @app.errorhandler(404)

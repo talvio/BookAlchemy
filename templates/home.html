@@ -39,16 +39,23 @@
                 </div>
             {% endfor %}
             <div id="pagination">
-                <button type="submit" id="up" name="page_scroll" value="up"> </button>
-                <div id="page_no">page {{page}} of {{total_pages}}</div>
-                <button type="submit" id="down" name="page_scroll" value="down"> </button>
+                <button type="submit" id="up" name="page_scroll" value="up">
+                    <img src="{{ url_for('static', filename='images/arrow-left.png') }}" alt="⇽"/>
+                </button>
+                <div id="page_no">{{book_count}} books {{page}} of {{total_pages}}</div>
+                <button type="submit" id="down" name="page_scroll" value="down">
+                    <img src="{{ url_for('static', filename='images/arrow-right.png') }}" alt="⇾"/>
+                </button>
             </div>
         </div>
     </form>
-        {% if not results %}
-            <div>
-                There are no books to show.
-            </div>
-        {% endif %}
+    {% if not results %}
+        <div class="space_center">
+            <div>There are no books to show.</div>
+
+            <a id="home_button" href="{{ url_for('home') }}"> </a>
+
+        </div>
+    {% endif %}
 
 {% endblock %}

@@ -1,0 +1,19 @@
+{% extends "common.html" %}
+
+{% block title %}Library Lobby{% endblock %}
+
+{% block content %}
+
+
+    <h2>That book is gone now! Are you happy about it?</h2>
+
+    <img class="round" src="{{ url_for('static', filename='images/burned.png') }}" style="width: 500px" alt="Book is gone!"/>
+
+
+    <p>Use this button to go back to the lobby, you monster!</p>
+
+
+<a id="home_button" href="{{ url_for('home') }}"> </a>
+
+
+{% endblock %}

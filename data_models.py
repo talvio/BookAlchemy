@@ -1,21 +1,8 @@
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy.orm import declarative_base, sessionmaker
+from sqlalchemy import create_engine
 
 db = SQLAlchemy()
-"""
-SQLAlchemy.Model declarative model base class. It sets the table name automatically instead of needing __tablename__.
-SQLAlchemy.session is a session that is scoped to the current Flask application context. It is cleaned up after every request.
-SQLAlchemy.metadata and SQLAlchemy.metadatas gives access to each metadata defined in the config.
-SQLAlchemy.engine and SQLAlchemy.engines gives access to each engine defined in the config.
-SQLAlchemy.create_all() creates all tables.
-You must be in an active Flask application context to execute queries and to access the session and engine.
-"""
-
-# Create a database session
-#Session = sessionmaker(bind=engine)
-#session = Session()
-
-# Define the data table class's parent class
-#Base = declarative_base()
 
 
 class Author(db.Model):
@@ -44,6 +31,7 @@ class Author(db.Model):
 
 
 class Book(db.Model):
+    """ Definition of the book in the SQL database."""
     __tablename__ = 'books'
     book_id = db.Column(db.Integer, primary_key=True, autoincrement=True)
     author_id = db.Column(db.Integer, db.ForeignKey('authors.author_id'), nullable=False)
@@ -71,7 +59,9 @@ class Book(db.Model):
                 f"{self.rating}/10"
         )
 
+
 def add_author(name, birth_date, date_of_death, biography):
+    """ Add author to the database.  """
     author = Author()
     author.name = name
     author.birth_date = birth_date
@@ -81,7 +71,9 @@ def add_author(name, birth_date, date_of_death, biography):
     db.session.commit()
     return author
 
+
 def add_book(title, author_id, isbn, publication_year, rating, summary):
+    """ Add a book to the database.  """
     book = Book()
     book.title = title
     book.author_id = author_id
@@ -93,9 +85,34 @@ def add_book(title, author_id, isbn, publication_year, rating, summary):
     db.session.commit()
     return book
 
-def update_database():
+
+def delete_book(book):
+    """ Delete a book from the database. """
+    db.session.delete(book)
     db.session.commit()
 
 
+def update_database():
+    """ Commit changes to the database. """
+    db.session.commit()
 
 
+def get_books_and_ratings(session):
+    """ """
+    all_books = (
+        session.query(Author, Book)
+        .join(Book, Author.author_id == Book.author_id)
+        #.order_by(order_by.get(sort_by, Book.title).get(sort_direction, 'asc'))
+        .all()
+    )
+    for author, book in all_books:
+        if book.rating:
+            print(author.name, book.title, book.isbn, book.publication_year, book.rating)
+
+
+if __name__ == '__main__':
+    # Create a database session
+    engine = create_engine('sqlite:///data/library.sqlite')
+    Session = sessionmaker(bind=engine)
+    session = Session()
+    get_books_and_ratings(session=session)

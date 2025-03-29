@@ -1,0 +1,27 @@
+{% extends "common.html" %}
+
+{% block title %}Library Lobby{% endblock %}
+
+{% block content %}
+
+
+    <h2>{{ question }}</h2>
+    <div class="space_center">
+        <img class="round" src="{{ url_for('static', filename='images/question.png') }}" style="width: 300px" alt="Book is gone!"/>
+
+        <form class="confirmation_form" action="{{ url_for( 'confirmation' ) }}" method="post">
+
+            <input type="hidden" name="next_action" value="{{ next_action }}" />
+            <input type="hidden" name="hidden_json" value='{{ hidden_json|tojson }}' />
+
+            <div>
+                <button type="submit" name="confirmation" value="yes">{{ yes }}</button>
+                <button type="submit" name="confirmation" value="no">{{ no }}</button>
+            </div>
+        </form>
+
+        <a id="home_button" href="{{ url_for('home') }}"> </a>
+    </div>
+
+
+{% endblock %}

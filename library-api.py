@@ -1,3 +1,5 @@
+"""" This file ended up being unnecessary for the project. At least so far. """
+
 import requests
 
 API_URL_AUTHORS = "https://openlibrary.org/search/authors.json"

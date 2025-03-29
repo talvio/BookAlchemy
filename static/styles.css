@@ -14,14 +14,14 @@ nav {
 }
 
 
-.edit-author-btn, .add-book-btn, .edit_book_button, nav a, nav button, #pagination #up, #pagination #down {
+.edit-author-btn, .add-book-btn, .edit_book_button, nav a, nav button {
     padding: 8px 12px;
     text-decoration: none;
     border: 2px #787875FF solid;
     border-radius: 5px;
     cursor: pointer;
     background-color: rgba(80, 80, 77, 0.92);
-    color: #efcdc7;
+    color: #F2907E;
     box-shadow: 25px 25px 30px rgba(0, 0, 0, 0.5); /* X-offset, Y-offset, Blur, Color */
     &:hover{
         background-color: rgba(58, 58, 57, 0.92);
@@ -33,18 +33,12 @@ nav {
         outline: none;
     }
     &:link, &:visited, &:active {
-        color: #efcdc7;
+        color: #F2907E;
         text-decoration: none;
     }
 
 }
 
-.edit_book_button {
-    position: absolute;
-    align-items: center;
-    top: 10px;
-    right: 20px;
-}
 
 #author-buttons {  /* These are on Author and Book pages */
     position: absolute;
@@ -62,6 +56,14 @@ nav {
 
 .round {
     border-radius: 50%;
+}
+
+.space_center {
+    width: 100%;
+    display: grid;
+    place-items: center;
+    gap:20px;
+    margin:20px;
 }
 
 #home_button {
@@ -287,27 +289,49 @@ button {
     top: 20px;
     right: 20px;
     display: grid;
+    place-items: center;
     grid-template-columns: auto auto auto;
     gap: 10px;
     font-size: 12px;
-    align-items: center;
+}
+
+#book-list #pagination button {
+    background-color: #00000000;
+    height: 30px;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    place-items: center;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0);
 }
 
 #book-list #pagination #page_no {
-    align-items: center;
+    display: grid;
+    place-items: center;
 }
 
-#book-list #pagination #up {
-    border-top-left-radius: 50%;
-    border-bottom-left-radius: 50%;
-    width: 70px;
+#up img , #down img {
+    width: 40px;
+    padding: 0;
+    text-decoration: none;
+    cursor: pointer;
+    color: #efcdc7;
+    border-radius: 50%;
+    box-shadow: 0 0 0 rgba(0, 0, 0, 0.5);
+    &:hover{
+        background-color: rgba(58, 58, 57, 0.92);
+        box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color */
+    }
+    &:focus{
+        background-color: #989895FF;
+        box-shadow: 10px 5px 20px rgba(239, 205, 199, 0.5); /* X-offset, Y-offset, Blur, Color *//
+        outline: none;
+    }
+    &:link, &:visited, &:active {
+        color: #efcdc7;
+        text-decoration: none;
+    }
 }
-#book-list #pagination #down {
-    border-top-right-radius: 50%;
-    border-bottom-right-radius: 50%;
-    width: 70px;
-}
-
 
 /* Add book */
 #add_book_form_container, #edit_book_form_container {
@@ -408,7 +432,7 @@ button {
 }
 
 a:link {
-    color: #F2907E;
+    color: antiquewhite;
     text-decoration: none;
 }
 a:visited {
